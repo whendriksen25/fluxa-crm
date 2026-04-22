@@ -44,11 +44,11 @@ export function Sidebar() {
   return (
     <aside className="flex h-full w-60 shrink-0 flex-col border-r border-border/50 bg-card">
       {/* Logo */}
-      <div className="flex h-16 items-center border-b border-border/50 px-4">
+      <div className="flex h-16 items-center border-b border-border/50 px-5">
         <img
           src="/fluxa-logo.svg"
           alt="FLUXA"
-          className="h-7 w-auto"
+          className="h-9 w-auto"
         />
       </div>
 
