@@ -28,8 +28,34 @@ const stageLabels: Record<string, string> = {
   churned: "Churned",
 }
 
+// Demo contact shown when no real data exists
+const DEMO_CONTACTS: (Contact & { company?: { name: string } | null })[] = [
+  {
+    id: "demo-yves",
+    tenant_id: "",
+    first_name: "Yves",
+    last_name: "van Sante",
+    email: "yves.vansante@equans.com",
+    phone: "+32 471 00 00 00",
+    job_title: "Key Account Manager",
+    company_id: null,
+    stage: "customer" as const,
+    source: "manual" as const,
+    lead_source: null,
+    owner_id: null,
+    tags: ["Electrical Installer"],
+    custom_fields: {},
+    notes: null,
+    last_contacted_at: new Date(Date.now() - 2 * 86400000).toISOString(),
+    next_follow_up: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    company: { name: "Equans" },
+  },
+]
+
 export default function ContactsPage() {
-  const [contacts, setContacts] = useState<Contact[]>([])
+  const [contacts, setContacts] = useState<(Contact & { company?: { name: string } | null })[]>([])
   const [total, setTotal] = useState(0)
   const [search, setSearch] = useState("")
   const [stageFilter, setStageFilter] = useState("")
@@ -59,11 +85,20 @@ export default function ContactsPage() {
       const data = await res.json()
 
       if (res.ok) {
-        setContacts(data.contacts || [])
-        setTotal(data.total || 0)
+        const apiContacts = data.contacts || []
+        // Show demo data when no real contacts exist
+        if (apiContacts.length === 0 && !search && !stageFilter && !tagFilter && !leadSourceFilter) {
+          setContacts(DEMO_CONTACTS)
+          setTotal(DEMO_CONTACTS.length)
+        } else {
+          setContacts(apiContacts)
+          setTotal(data.total || 0)
+        }
       }
     } catch {
-      // silently fail
+      // Show demo data on error
+      setContacts(DEMO_CONTACTS)
+      setTotal(DEMO_CONTACTS.length)
     } finally {
       setLoading(false)
     }
@@ -244,8 +279,7 @@ export default function ContactsPage() {
                       {contact.phone || "—"}
                     </td>
                     <td className="hidden px-4 py-3 text-sm text-muted-foreground lg:table-cell">
-                      {(contact as unknown as { company: { name: string } | null })
-                        .company?.name || "—"}
+                      {contact.company?.name || "—"}
                     </td>
                     <td className="px-4 py-3">
                       <Badge

@@ -23,6 +23,54 @@ const categoryColors: Record<string, string> = {
   "Partner": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
 }
 
+// Demo companies shown when no real data exists
+const DEMO_COMPANIES: Company[] = [
+  {
+    id: "demo-equans",
+    tenant_id: "",
+    name: "Equans",
+    domain: "equans.com",
+    industry: "Electrical Services",
+    size: "10,000+",
+    website: "https://www.equans.com",
+    phone: null,
+    address: null,
+    notes: null,
+    custom_fields: {},
+    category: "Electrical Installer",
+    country: "Belgium",
+    region: "Flanders",
+    segment: "Enterprise",
+    relevance: "Zeer hoog",
+    network_group: null,
+    location: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: "demo-colruyt",
+    tenant_id: "",
+    name: "Colruyt Group",
+    domain: "colruytgroup.com",
+    industry: "Retail / EV Charging",
+    size: "5,000+",
+    website: "https://www.colruytgroup.com",
+    phone: null,
+    address: null,
+    notes: null,
+    custom_fields: {},
+    category: "Enterprise",
+    country: "Belgium",
+    region: "Flanders",
+    segment: "Enterprise",
+    relevance: "Hoog",
+    network_group: null,
+    location: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+]
+
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState<Company[]>([])
   const [total, setTotal] = useState(0)
@@ -55,11 +103,20 @@ export default function CompaniesPage() {
       const data = await res.json()
 
       if (res.ok) {
-        setCompanies(data.companies || [])
-        setTotal(data.total || 0)
+        const apiCompanies = data.companies || []
+        // Show demo data when no real companies exist
+        if (apiCompanies.length === 0 && !search && !categoryFilter && !countryFilter && !relevanceFilter) {
+          setCompanies(DEMO_COMPANIES)
+          setTotal(DEMO_COMPANIES.length)
+        } else {
+          setCompanies(apiCompanies)
+          setTotal(data.total || 0)
+        }
       }
     } catch {
-      // silently fail
+      // Show demo data on error
+      setCompanies(DEMO_COMPANIES)
+      setTotal(DEMO_COMPANIES.length)
     } finally {
       setLoading(false)
     }
