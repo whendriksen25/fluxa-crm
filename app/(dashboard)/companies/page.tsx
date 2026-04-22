@@ -18,9 +18,9 @@ const relevanceColors: Record<string, string> = {
 }
 
 const categoryColors: Record<string, string> = {
-  "ETG": "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-  "MV Installer": "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  "LV Installer": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  "Electrical Installer": "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+  "Enterprise": "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  "Partner": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
 }
 
 export default function CompaniesPage() {
@@ -128,9 +128,9 @@ export default function CompaniesPage() {
           className="flex h-8 rounded-lg border border-border bg-background px-3 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/50"
         >
           <option value="">All categories</option>
-          <option value="ETG">ETG</option>
-          <option value="MV Installer">MV Installer</option>
-          <option value="LV Installer">LV Installer</option>
+          <option value="Electrical Installer">Electrical Installer</option>
+          <option value="Enterprise">Enterprise</option>
+          <option value="Partner">Partner</option>
         </select>
         <select
           value={countryFilter}

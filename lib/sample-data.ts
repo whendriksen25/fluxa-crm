@@ -1,7 +1,7 @@
 /**
- * FLUXA CRM — Sample data with 1 demo customer: Colruyt Group.
- * Demonstrates every feature with a single realistic account.
- * Context: Colruyt is rolling out EV charging across 200+ stores.
+ * FLUXA CRM — Sample data with 2 demo customers: Equans and Colruyt Group.
+ * Demonstrates every feature with realistic accounts.
+ * Contact: Yves van Sante (sole account executive).
  */
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"]
@@ -19,12 +19,11 @@ export const sampleStats = {
 }
 
 export const sampleRepPerformance = [
-  { id: "s1", name: "Pieter Claes", role: "Senior AE", quota: 600_000, attainment: 82, closed_revenue: 492_000, pipeline_value: 540_000, activity_count: 58, activity_score: 5, avg_deal_size: 82_000, deal_count: 8, win_rate: 75 },
-  { id: "s2", name: "Lies Vermeersch", role: "AE", quota: 600_000, attainment: 62, closed_revenue: 372_000, pipeline_value: 400_000, activity_count: 41, activity_score: 3, avg_deal_size: 62_000, deal_count: 7, win_rate: 57 },
+  { id: "s1", name: "Yves van Sante", role: "Senior AE", quota: 1_200_000, attainment: 72, closed_revenue: 864_000, pipeline_value: 940_000, activity_count: 99, activity_score: 5, avg_deal_size: 72_000, deal_count: 15, win_rate: 68 },
 ]
 
 export const sampleDealsAtRisk = [
-  { id: "d1", title: "Colruyt DC Charging", company_name: "Colruyt Group", rep_name: "Lies Vermeersch", stage_name: "Proposal sent", stage_color: "#f59e0b", value: 180_000, stalled_days: 14 },
+  { id: "d1", title: "Equans Electrical Maintenance", company_name: "Equans", rep_name: "Yves van Sante", stage_name: "Proposal sent", stage_color: "#f59e0b", value: 180_000, stalled_days: 14 },
 ]
 
 export const sampleFunnel = [
@@ -70,38 +69,38 @@ function makeRepMonthly(base: number[], oppBase: number[], revBase: number[]) {
 
 export const sampleTimelineReps = [
   {
-    id: "s1", name: "Pieter Claes", role: "Senior AE", quota: 600_000, attainment: 82,
+    id: "s1", name: "Yves van Sante", role: "Senior AE", quota: 1_200_000, attainment: 72,
     diagnosis: "blue" as const,
-    total_activities: 58, total_closed: 492_000, total_pipeline: 540_000, win_rate: 75,
+    total_activities: 99, total_closed: 864_000, total_pipeline: 940_000, win_rate: 68,
     monthly: makeRepMonthly(
-      [6, 8, 9, 10, 11, 12, 13, 14],
-      [60_000, 90_000, 130_000, 170_000, 220_000, 280_000, 350_000, 420_000],
-      [0, 24_000, 48_000, 96_000, 192_000, 288_000, 384_000, 492_000],
-    ),
-  },
-  {
-    id: "s2", name: "Lies Vermeersch", role: "AE", quota: 600_000, attainment: 62,
-    diagnosis: "amber" as const,
-    total_activities: 41, total_closed: 372_000, total_pipeline: 400_000, win_rate: 57,
-    monthly: makeRepMonthly(
-      [4, 5, 6, 6, 7, 7, 8, 8],
-      [40_000, 60_000, 90_000, 120_000, 160_000, 200_000, 250_000, 310_000],
-      [0, 24_000, 48_000, 96_000, 144_000, 216_000, 288_000, 372_000],
+      [10, 13, 15, 17, 18, 19, 21, 23],
+      [100_000, 150_000, 220_000, 290_000, 380_000, 480_000, 600_000, 730_000],
+      [0, 48_000, 96_000, 192_000, 336_000, 504_000, 672_000, 864_000],
     ),
   },
 ]
 
-// ── Figure 5: Per account — only Colruyt Group ──
+// ── Figure 5: Per account — Equans and Colruyt Group ──
 
 export const sampleTimelineAccounts = [
   {
-    id: "a1", name: "Colruyt Group", owner_name: "Pieter Claes",
+    id: "a1", name: "Equans", owner_name: "Yves van Sante",
     diagnosis: "blue" as const,
-    total_activities: 42, total_revenue: 384_000, total_pipeline: 420_000,
+    total_activities: 52, total_revenue: 480_000, total_pipeline: 520_000,
     monthly: makeRepMonthly(
-      [3, 5, 6, 7, 7, 8, 8, 9],
-      [40_000, 65_000, 95_000, 130_000, 170_000, 220_000, 280_000, 340_000],
-      [0, 0, 48_000, 96_000, 144_000, 192_000, 288_000, 384_000],
+      [5, 7, 8, 9, 9, 10, 11, 12],
+      [50_000, 80_000, 120_000, 165_000, 215_000, 275_000, 345_000, 420_000],
+      [0, 24_000, 48_000, 120_000, 192_000, 288_000, 384_000, 480_000],
+    ),
+  },
+  {
+    id: "a2", name: "Colruyt Group", owner_name: "Yves van Sante",
+    diagnosis: "green" as const,
+    total_activities: 47, total_revenue: 384_000, total_pipeline: 420_000,
+    monthly: makeRepMonthly(
+      [5, 6, 7, 8, 9, 9, 10, 11],
+      [50_000, 70_000, 100_000, 125_000, 165_000, 205_000, 255_000, 310_000],
+      [0, 24_000, 48_000, 72_000, 144_000, 216_000, 288_000, 384_000],
     ),
   },
 ]
@@ -121,20 +120,27 @@ export const sampleAmStats = {
 
 export const sampleAmAccountHealth = [
   {
-    id: "h1", name: "Colruyt Group", category: "Enterprise",
-    arr: 804_000,
-    last_contact: new Date(Date.now() - 3 * 86400000).toISOString(),
-    last_contact_days: 3,
+    id: "h1", name: "Equans", category: "Enterprise",
+    arr: 520_000,
+    last_contact: new Date(Date.now() - 2 * 86400000).toISOString(),
+    last_contact_days: 2,
     health: "green" as const, trend: "up",
+  },
+  {
+    id: "h2", name: "Colruyt Group", category: "Enterprise",
+    arr: 284_000,
+    last_contact: new Date(Date.now() - 5 * 86400000).toISOString(),
+    last_contact_days: 5,
+    health: "green" as const, trend: "stable",
   },
 ]
 
 export const sampleAmTasks = [
-  { id: "t1", title: "Follow up on DC fast-charger proposal — Colruyt Halle", urgency: "overdue" as const, due_date: null, contact_name: "Stefan Willems", deal_title: "Colruyt DC Charging", arr_at_stake: 180_000 },
-  { id: "t2", title: "Send updated lease pricing for Bio-Planet locations", urgency: "today" as const, due_date: null, contact_name: "An Peeters", deal_title: null, arr_at_stake: 120_000 },
-  { id: "t3", title: "Schedule Q3 review meeting with Jef Colruyt", urgency: "today" as const, due_date: null, contact_name: "Jef Colruyt", deal_title: null, arr_at_stake: 804_000 },
+  { id: "t1", title: "Send proposal to Equans", urgency: "today" as const, due_date: null, contact_name: "Yves van Sante", deal_title: "Equans Electrical Maintenance", arr_at_stake: 180_000 },
+  { id: "t2", title: "Follow up on DC fast-charger proposal — Colruyt Halle", urgency: "overdue" as const, due_date: null, contact_name: "Yves van Sante", deal_title: "Colruyt DC Charging", arr_at_stake: 120_000 },
+  { id: "t3", title: "Schedule Q3 review meeting — Colruyt Group", urgency: "today" as const, due_date: null, contact_name: "Yves van Sante", deal_title: null, arr_at_stake: 284_000 },
   { id: "t4", title: "Prepare installation report for 12 completed stores", urgency: "upcoming" as const, due_date: null, contact_name: null, deal_title: null, arr_at_stake: 0 },
-  { id: "t5", title: "Review service contract renewal terms", urgency: "upcoming" as const, due_date: null, contact_name: "Stefan Willems", deal_title: "Colruyt Service 2026", arr_at_stake: 240_000 },
+  { id: "t5", title: "Review service contract renewal terms — Equans", urgency: "upcoming" as const, due_date: null, contact_name: "Yves van Sante", deal_title: "Equans Service 2026", arr_at_stake: 240_000 },
 ]
 
 export const sampleAmPipeline = [
@@ -144,6 +150,6 @@ export const sampleAmPipeline = [
 ]
 
 export const sampleAmRenewals = [
-  { id: "r1", title: "Colruyt Service & Maintenance 2026", company_name: "Colruyt Group", value: 240_000, days_left: 28, urgency: "red" },
+  { id: "r1", title: "Equans Service & Maintenance 2026", company_name: "Equans", value: 280_000, days_left: 28, urgency: "red" },
   { id: "r2", title: "Colruyt Phase 3 — 50 new locations", company_name: "Colruyt Group", value: 420_000, days_left: 65, urgency: "green" },
 ]

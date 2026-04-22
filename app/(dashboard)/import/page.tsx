@@ -76,13 +76,6 @@ interface ProcessResult {
   errors: string[]
 }
 
-interface CellpackResult {
-  success: boolean
-  companies_created: number
-  contacts_created: number
-  errors: string[]
-}
-
 type Step = "upload" | "map" | "done"
 
 export default function ImportPage() {
@@ -101,11 +94,6 @@ export default function ImportPage() {
   const [processing, setProcessing] = useState(false)
   const [processResult, setProcessResult] = useState<ProcessResult | null>(null)
   const [processError, setProcessError] = useState<string | null>(null)
-
-  // Cellpack import state
-  const [cellpackImporting, setCellpackImporting] = useState(false)
-  const [cellpackResult, setCellpackResult] = useState<CellpackResult | null>(null)
-  const [cellpackError, setCellpackError] = useState<string | null>(null)
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -214,28 +202,6 @@ export default function ImportPage() {
     setUploadError(null)
   }
 
-  async function handleCellpackImport() {
-    setCellpackImporting(true)
-    setCellpackResult(null)
-    setCellpackError(null)
-
-    try {
-      const res = await fetch("/api/import/excel", { method: "POST" })
-      const data = await res.json()
-
-      if (!res.ok) {
-        setCellpackError(data.error || "Import failed.")
-        return
-      }
-
-      setCellpackResult(data)
-    } catch {
-      setCellpackError("Something went wrong. Check your connection and try again.")
-    } finally {
-      setCellpackImporting(false)
-    }
-  }
-
   const mappedFieldCount = Object.values(mapping).filter(
     (v) => v && v !== "skip"
   ).length
@@ -249,47 +215,38 @@ export default function ImportPage() {
         </p>
       </div>
 
-      {/* Cellpack Excel import */}
+      {/* Import from external CRM */}
       <div className="rounded-xl border border-border/50 bg-card p-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h3 className="text-base font-medium">Cellpack prospect lists</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Import the Belgium and Netherlands ETG, MV, and LV installer lists.
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <span className="inline-flex items-center rounded-md bg-indigo-500/10 px-2.5 py-0.5 text-xs font-medium text-indigo-400">ETG</span>
-              <span className="inline-flex items-center rounded-md bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-400">MV Installer</span>
-              <span className="inline-flex items-center rounded-md bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">LV Installer</span>
-            </div>
-          </div>
-          <Button onClick={handleCellpackImport} disabled={cellpackImporting} className="shrink-0">
-            {cellpackImporting ? (
-              <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Importing...</>
-            ) : (
-              <><FileSpreadsheet className="mr-2 h-4 w-4" />Import Cellpack files</>
-            )}
+        <h3 className="text-base font-medium">Import from another CRM</h3>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Pull contacts and companies from Salesforce, HubSpot, or upload an Excel file.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Button variant="outline" size="sm" disabled>
+            <FileSpreadsheet className="mr-2 h-4 w-4" />
+            Import from Salesforce
           </Button>
+          <Button variant="outline" size="sm" disabled>
+            <FileSpreadsheet className="mr-2 h-4 w-4" />
+            Import from HubSpot
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => document.getElementById("excel-upload")?.click()}>
+            <Upload className="mr-2 h-4 w-4" />
+            Import Excel / CSV
+          </Button>
+          <input
+            id="excel-upload"
+            type="file"
+            accept=".csv,.xlsx,.xls"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
         </div>
-        {cellpackResult && (
-          <div className="mt-4 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              <p className="text-sm font-medium text-emerald-400">Import complete</p>
-            </div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Created {cellpackResult.companies_created} companies and {cellpackResult.contacts_created} contacts.
-            </p>
-          </div>
-        )}
-        {cellpackError && (
-          <div className="mt-4 rounded-lg border border-red-500/20 bg-red-500/5 p-4">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-red-500" />
-              <p className="text-sm font-medium text-red-400">{cellpackError}</p>
-            </div>
-          </div>
-        )}
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="inline-flex items-center rounded-md bg-indigo-500/10 px-2.5 py-0.5 text-xs font-medium text-indigo-400">Salesforce</span>
+          <span className="inline-flex items-center rounded-md bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-400">HubSpot</span>
+          <span className="inline-flex items-center rounded-md bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">Excel / CSV</span>
+        </div>
       </div>
 
       {/* CSV Import Wizard */}
@@ -581,7 +538,7 @@ export default function ImportPage() {
               &quot;Name&quot;, &quot;Email&quot;, &quot;Phone&quot;)
             </li>
             <li>
-              Bridge will try to auto-detect your columns — you can adjust
+              FLUXA will try to auto-detect your columns — you can adjust
               the mapping before importing
             </li>
             <li>

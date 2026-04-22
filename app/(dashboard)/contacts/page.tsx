@@ -135,9 +135,7 @@ export default function ContactsPage() {
           className="flex h-8 rounded-lg border border-border bg-background px-3 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/50"
         >
           <option value="">All groups</option>
-          <option value="ETG">ETG</option>
-          <option value="MV Installer">MV Installer</option>
-          <option value="LV Installer">LV Installer</option>
+          <option value="Electrical Installer">Electrical Installer</option>
           <option value="Belgium">Belgium</option>
           <option value="Netherlands">Netherlands</option>
         </select>
@@ -150,7 +148,9 @@ export default function ContactsPage() {
           className="flex h-8 rounded-lg border border-border bg-background px-3 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/50"
         >
           <option value="">All sources</option>
-          <option value="Webscrape jan 2026">Webscrape jan 2026</option>
+          <option value="Salesforce">Salesforce</option>
+          <option value="HubSpot">HubSpot</option>
+          <option value="Excel import">Excel import</option>
         </select>
       </div>
 
