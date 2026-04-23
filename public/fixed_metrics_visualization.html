@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales Deal Visualization Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #2c3e50;
+            color: white;
+        }
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            background-color: white;
+            min-height: 800px;
+        }
+        .visible {
+            display: block;
+        }
+        .plot-container {
+            width: 100%;
+            height: 800px;
+        }
+        .metrics-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .metric-card {
+            width: 48%;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: white;
+            box-sizing: border-box;
+            height: 350px;
+        }
+        .metric-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 5px;
+        }
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sales Deal Visualization Dashboard</h1>
+        <p>Comprehensive view of deal qualification and quantification</p>
+    </div>
+    
+    <div class="container">
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'Relationships')">Deal Relationships</button>
+            <button class="tablinks" onclick="openTab(event, 'Metrics')">Deal Metrics</button>
+            <button class="tablinks" onclick="openTab(event, 'Instructions')">Instructions</button>
+        </div>
+        
+        <div id="Relationships" class="tabcontent visible">
+            <div id="relationship-plot" class="plot-container"></div>
+        </div>
+        
+        <div id="Metrics" class="tabcontent">
+            <div class="metrics-container">
+                <div class="metric-card">
+                    <div class="metric-title">Deal Value vs. Opportunity Size</div>
+                    <div id="deal-value-plot" style="height: 300px;"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Win Probability</div>
+                    <div id="win-probability-plot" style="height: 300px;"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Stakeholder Sentiment Distribution</div>
+                    <div id="sentiment-plot" style="height: 300px;"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Competitor Positioning</div>
+                    <div id="competitor-plot" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="Instructions" class="tabcontent">
+            <h2>How to Use This Dashboard</h2>
+            <p>This visualization provides a comprehensive overview of your sales deals, including competitors, customer ecosystem, deal size, opportunity size, and the decision-making unit.</p>
+            
+            <h3>Deal Relationships Tab</h3>
+            <p>The relationship visualization shows how all elements of the sales opportunity are interconnected:</p>
+            <ul>
+                <li><strong>Central Node:</strong> The deal itself</li>
+                <li><strong>Decision Making Unit:</strong> Stakeholders with different shapes based on role (diamond=executive, square=technical, etc.)</li>
+                <li><strong>Customer Ecosystem:</strong> Consultants, system integrators, and other external entities</li>
+                <li><strong>Competitors:</strong> Companies competing for the same opportunity</li>
+            </ul>
+            <p>Node size indicates influence level, and colors indicate sentiment or threat level.</p>
+            
+            <h3>Deal Metrics Tab</h3>
+            <p>The metrics visualization provides quantitative analysis:</p>
+            <ul>
+                <li><strong>Deal Value vs. Opportunity Size:</strong> Current deal compared to total potential</li>
+                <li><strong>Win Probability:</strong> Likelihood of winning the deal</li>
+                <li><strong>Stakeholder Sentiment:</strong> Distribution of stakeholder attitudes</li>
+                <li><strong>Competitor Positioning:</strong> Relative strength of competitors</li>
+            </ul>
+            
+            <h3>Interactive Features</h3>
+            <p>You can interact with the visualization in several ways:</p>
+            <ul>
+                <li>Hover over any node to see detailed information</li>
+                <li>Click on legend items to show/hide specific categories</li>
+                <li>Zoom in/out using mouse wheel or pinch gestures</li>
+                <li>Pan by clicking and dragging</li>
+            </ul>
+            
+            <h3>Best Practices for Using This Dashboard</h3>
+            <ul>
+                <li>Update the visualization before important sales meetings</li>
+                <li>Use the relationship view to identify key influencers and potential champions</li>
+                <li>Use the metrics view to track deal progress and competitor positioning</li>
+                <li>Share the visualization with your sales team to align on strategy</li>
+                <li>Focus on converting neutral stakeholders to supporters</li>
+                <li>Identify and mitigate the influence of competitors on key stakeholders</li>
+                <li>Leverage positive relationships in the customer ecosystem</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>Sales Deal Visualization Tool - Created for Sales Managers</p>
+        </div>
+    </div>
+    
+    <script>
+        // Function to open tabs
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" visible", "");
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).className += " visible";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Create relationship visualization
+        function createRelationshipVisualization() {
+            // Sample data
+            const data = {
+                deal_information: {
+                    deal_id: "DEAL-2025-0428",
+                    deal_name: "Enterprise Manufacturing Solution Implementation",
+                    deal_value: 750000,
+                    opportunity_size: 2500000,
+                    win_probability: 65,
+                    deal_stage: "Solution Proposal",
+                    expected_close_date: "2025-08-15",
+                    implementation_timeline: "3 months",
+                    customer_name: "Global Manufacturing Inc.",
+                    industry: "Industrial Manufacturing"
+                }
+            };
+            
+            // Create traces for different node types
+            const traces = [];
+            
+            // Central deal node
+            traces.push({
+                x: [0.5],
+                y: [0.5],
+                mode: 'markers+text',
+                marker: {
+                    size: 30,
+                    color: 'rgba(65, 105, 225, 0.9)',
+                    symbol: 'circle',
+                    line: {width: 2, color: 'rgba(50, 50, 50, 0.8)'}
+                },
+                text: ['Deal'],
+                textposition: 'middle center',
+                hovertext: [`Deal: ${data.deal_information.deal_name}<br>Value: $${data.deal_information.deal_value.toLocaleString()}<br>Opportunity: $${data.deal_information.opportunity_size.toLocaleString()}<br>Win Probability: ${data.deal_information.win_probability}%`],
+                hoverinfo: 'text',
+                name: 'Deal'
+            });
+            
+            // Decision Making Unit nodes
+            const dmuData = [
+                {id: 'S001', name: 'Jennifer Chen', title: 'Chief Operations Officer', role_type: 'executive', influence_level: 9, sentiment: 'supporter'},
+                {id: 'S002', name: 'Michael Rodriguez', title: 'IT Director', role_type: 'technical', influence_level: 8, sentiment: 'champion'},
+                {id: 'S003', name: 'Sarah Johnson', title: 'CFO', role_type: 'financial', influence_level: 8, sentiment: 'neutral'},
+                {id: 'S004', name: 'David Kim', title: 'Production Manager', role_type: 'user', influence_level: 6, sentiment: 'supporter'},
+                {id: 'S005', name: 'Robert Taylor', title: 'CEO', role_type: 'executive', influence_level: 10, sentiment: 'neutral'},
+                {id: 'S006', name: 'Lisa Wong', title: 'Procurement Manager', role_type: 'financial', influence_level: 7, sentiment: 'skeptic'}
+            ];
+            
+            const dmuX = [];
+            const dmuY = [];
+            const dmuSize = [];
+            const dmuColor = [];
+            const dmuSymbol = [];
+            const dmuText = [];
+            const dmuHover = [];
+            
+            dmuData.forEach((s, i) => {
+                const x = 0.5 + 0.4 * (i / dmuData.length) * (i % 2 * 2 - 1);
+                const y = 0.3 + 0.2 * (i / dmuData.length);
+                
+                dmuX.push(x);
+                dmuY.push(y);
+                dmuSize.push(15 + s.influence_level);
+                
+                // Color based on sentiment
+                let color;
+                if (s.sentiment === 'champion') {
+                    color = 'rgba(0, 128, 0, 0.8)';  // Green
+                } else if (s.sentiment === 'supporter') {
+                    color = 'rgba(144, 238, 144, 0.8)';  // Light green
+                } else if (s.sentiment === 'neutral') {
+                    color = 'rgba(128, 128, 128, 0.8)';  // Gray
+                } else if (s.sentiment === 'skeptic') {
+                    color = 'rgba(255, 165, 0, 0.8)';  // Orange
+                } else {  // blocker
+                    color = 'rgba(255, 0, 0, 0.8)';  // Red
+                }
+                dmuColor.push(color);
+                
+                // Symbol based on role
+                let symbol;
+                if (s.role_type === 'executive') {
+                    symbol = 'diamond';
+                } else if (s.role_type === 'technical') {
+                    symbol = 'square';
+                } else if (s.role_type === 'financial') {
+                    symbol = 'triangle-up';
+                } else {  // user or influencer
+                    symbol = 'circle';
+                }
+                dmuSymbol.push(symbol);
+                
+                dmuText.push(s.name);
+                dmuHover.push(`Name: ${s.name}<br>Title: ${s.title}<br>Role: ${s.role_type}<br>Influence: ${s.influence_level}/10<br>Sentiment: ${s.sentiment}`);
+                
+                // Add connection line to center
+                traces.push({
+                    x: [0.5, x],
+                    y: [0.5, y],
+                    mode: 'lines',
+                    line: {width: 1, color: 'rgba(200, 200, 200, 0.5)'},
+                    hoverinfo: 'none',
+                    showlegend: false
+                });
+            });
+            
+            traces.push({
+                x: dmuX,
+                y: dmuY,
+                mode: 'markers+text',
+                marker: {
+                    size: dmuSize,
+                    color: dmuColor,
+                    symbol: dmuSymbol,
+                    line: {width: 1, color: 'rgba(50, 50, 50, 0.8)'}
+                },
+                text: dmuText,
+                textposition: 'bottom center',
+                hovertext: dmuHover,
+                hoverinfo: 'text',
+                name: 'Decision Making Unit'
+            });
+            
+            // Customer Ecosystem nodes
+            const ecoData = [
+                {id: 'E001', name: 'McKinsey & Company', entity_type: 'consultant', influence_level: 8, sentiment: 'neutral'},
+                {id: 'E002', name: 'TechIntegrate Solutions', entity_type: 'system_integrator', influence_level: 7, sentiment: 'advocate'},
+                {id: 'E003', name: 'Legacy Systems Inc.', entity_type: 'vendor', influence_level: 6, sentiment: 'opponent'},
+                {id: 'E004', name: 'Global Supply Chain Partners', entity_type: 'partner', influence_level: 5, sentiment: 'neutral'}
+            ];
+            
+            const ecoX = [];
+            const ecoY = [];
+            const ecoSize = [];
+            const ecoColor = [];
+            const ecoText = [];
+            const ecoHover = [];
+            
+            ecoData.forEach((e, i) => {
+                const x = 0.5 + 0.4 * (i / ecoData.length) * (i % 2 * 2 - 1);
+                const y = 0.7 + 0.2 * (i / ecoData.length);
+                
+                ecoX.push(x);
+                ecoY.push(y);
+                ecoSize.push(15 + e.influence_level);
+                
+                // Color based on entity type
+                let color;
+                if (e.entity_type === 'consultant') {
+                    color = 'rgba(138, 43, 226, 0.8)';  // Purple
+                } else if (e.entity_type === 'system_integrator') {
+                    color = 'rgba(75, 0, 130, 0.8)';  // Indigo
+                } else if (e.entity_type === 'vendor') {
+                    color = 'rgba(0, 0, 139, 0.8)';  // Dark blue
+                } else {  // partner
+                    color = 'rgba(70, 130, 180, 0.8)';  // Steel blue
+                }
+                ecoColor.push(color);
+                
+                ecoText.push(e.name);
+                ecoHover.push(`Name: ${e.name}<br>Type: ${e.entity_type}<br>Influence: ${e.influence_level}/10<br>Sentiment: ${e.sentiment}`);
+                
+                // Add connection line to center
+                traces.push({
+                    x: [0.5, x],
+                    y: [0.5, y],
+                    mode: 'lines',
+                    line: {width: 1, color: 'rgba(200, 200, 200, 0.5)'},
+                    hoverinfo: 'none',
+                    showlegend: false
+                });
+            });
+            
+            traces.push({
+                x: ecoX,
+                y: ecoY,
+                mode: 'markers+text',
+                marker: {
+                    size: ecoSize,
+                    color: ecoColor,
+                    symbol: 'hexagon',
+                    line: {width: 1, color: 'rgba(50, 50, 50, 0.8)'}
+                },
+                text: ecoText,
+                textposition: 'bottom center',
+                hovertext: ecoHover,
+                hoverinfo: 'text',
+                name: 'Customer Ecosystem'
+            });
+            
+            // Competitor nodes
+            const compData = [
+                {id: 'C001', company_name: 'IndustrySoft', threat_level: 'high', positioning_strength: 8, competitive_status: 'preferred', estimated_deal_value: 720000},
+                {id: 'C002', company_name: 'Enterprise Solutions Corp', threat_level: 'medium', positioning_strength: 7, competitive_status: 'evaluated', estimated_deal_value: 950000},
+                {id: 'C003', company_name: 'Legacy Systems Inc.', threat_level: 'medium', positioning_strength: 6, competitive_status: 'incumbent', estimated_deal_value: 500000},
+                {id: 'C004', company_name: 'NextGen Manufacturing', threat_level: 'low', positioning_strength: 5, competitive_status: 'evaluated', estimated_deal_value: 680000}
+            ];
+            
+            const compX = [];
+            const compY = [];
+            const compSize = [];
+            const compColor = [];
+            const compText = [];
+            const compHover = [];
+            
+            compData.forEach((c, i) => {
+                const x = 0.5 + 0.4 * (i / compData.length) * (i % 2 * 2 - 1);
+                const y = 0.1 + 0.15 * (i / compData.length);
+                
+                compX.push(x);
+                compY.push(y);
+                compSize.push(15 + c.positioning_strength);
+                
+                // Color based on threat level
+                let color;
+                if (c.threat_level === 'high') {
+                    color = 'rgba(220, 20, 60, 0.8)';  // Crimson
+                } else if (c.threat_level === 'medium') {
+                    color = 'rgba(255, 140, 0, 0.8)';  // Dark orange
+                } else {  // low
+                    color = 'rgba(255, 215, 0, 0.8)';  // Gold
+                }
+                compColor.push(color);
+                
+                compText.push(c.company_name);
+                compHover.push(`Company: ${c.company_name}<br>Threat Level: ${c.threat_level}<br>Strength: ${c.positioning_strength}/10<br>Status: ${c.competitive_status}<br>Est. Value: $${c.estimated_deal_value.toLocaleString()}`);
+                
+                // Add connection line to center
+                traces.push({
+                    x: [0.5, x],
+                    y: [0.5, y],
+                    mode: 'lines',
+                    line: {width: 1, color: 'rgba(200, 200, 200, 0.5)'},
+                    hoverinfo: 'none',
+                    showlegend: false
+                });
+            });
+            
+            traces.push({
+                x: compX,
+                y: compY,
+                mode: 'markers+text',
+                marker: {
+                    size: compSize,
+                    color: compColor,
+                    symbol: 'star',
+                    line: {width: 1, color: 'rgba(50, 50, 50, 0.8)'}
+                },
+                text: compText,
+                textposition: 'bottom center',
+                hovertext: compHover,
+                hoverinfo: 'text',
+                name: 'Competitors'
+            });
+            
+            // Layout configuration
+            const layout = {
+                title: {
+                    text: `Sales Deal Visualization: ${data.deal_information.customer_name} - ${data.deal_information.deal_name}`,
+                    font: {size: 16}
+                },
+                showlegend: true,
+                legend: {
+                    x: 0.01,
+                    y: 0.5,
+                    traceorder: 'normal',
+                    font: {family: 'sans-serif', size: 12},
+                    bgcolor: 'rgba(255, 255, 255, 0.5)',
+                    bordercolor: 'rgba(0, 0, 0, 0.3)',
+                    borderwidth: 1
+                },
+                hovermode: 'closest',
+                xaxis: {showgrid: false, zeroline: false, showticklabels: false, range: [0, 1]},
+                yaxis: {showgrid: false, zeroline: false, showticklabels: false, range: [0, 1]},
+                width: 1000,
+                height: 800,
+                plot_bgcolor: 'rgba(248, 248, 248, 0.95)',
+                annotations: [
+                    {
+                        x: 0.02,
+                        y: 0.98,
+                        xref: 'paper',
+                        yref: 'paper',
+                        text: `<b>${data.deal_information.deal_name}</b><br>Deal Value: $${data.deal_information.deal_value.toLocaleString()}<br>Opportunity Size: $${data.deal_information.opportunity_size.toLocaleString()}<br>Win Probability: ${data.deal_information.win_probability}%<br>Stage: ${data.deal_information.deal_stage}`,
+                        showarrow: false,
+                        font: {size: 12},
+                        align: 'left',
+                        bgcolor: 'rgba(255, 255, 255, 0.8)',
+                        bordercolor: 'rgba(0, 0, 0, 0.3)',
+                        borderwidth: 1,
+                        borderpad: 4
+                    },
+                    {
+                        x: 0.98,
+                        y: 0.98,
+                        xref: 'paper',
+                        yref: 'paper',
+                        text: '<b>Node Types:</b><br>◆ Executive<br>■ Technical<br>▲ Financial<br>● User/Influencer<br>⬢ Ecosystem Entity<br>★ Competitor<br><br><b>Colors:</b><br>Green: Positive/Champion<br>Gray: Neutral<br>Red/Orange: Negative/Threat',
+                        showarrow: false,
+                        font: {size: 10},
+                        align: 'right',
+                        bgcolor: 'rgba(255, 255, 255, 0.8)',
+                        bordercolor: 'rgba(0, 0, 0, 0.3)',
+                        borderwidth: 1,
+                        borderpad: 4
+                    }
+                ]
+            };
+            
+            Plotly.newPlot('relationship-plot', traces, layout);
+        }
+        
+        // Create metrics visualizations (separated into individual plots)
+        function createMetricsVisualizations() {
+            // Sample data
+            const data = {
+                deal_information: {
+                    deal_value: 750000,
+                    opportunity_size: 2500000,
+                    win_probability: 65,
+                    customer_name: "Global Manufacturing Inc.",
+                    deal_name: "Enterprise Manufacturing Solution Implementation"
+                },
+                stakeholders: [
+                    {sentiment: 'champion', count: 1},
+                    {sentiment: 'supporter', count: 2},
+                    {sentiment: 'neutral', count: 2},
+                    {sentiment: 'skeptic', count: 1},
+                    {sentiment: 'blocker', count: 0}
+                ],
+                competitors: [
+                    {name: 'IndustrySoft', strength: 8, threat_level: 'high'},
+                    {name: 'Enterprise Solutions Corp', strength: 7, threat_level: 'medium'},
+                    {name: 'Legacy Systems Inc.', strength: 6, threat_level: 'medium'},
+                    {name: 'NextGen Manufacturing', strength: 5, threat_level: 'low'}
+                ]
+            };
+            
+            // 1. Deal Value vs. Opportunity Size indicator
+            const dealValueTrace = {
+                type: 'indicator',
+                mode: 'number+delta+gauge',
+                value: data.deal_information.deal_value,
+                delta: {reference: data.deal_information.deal_value * 0.8, relative: true},
+                title: {text: "Deal Value ($)"},
+                gauge: {
+                    axis: {range: [0, data.deal_information.opportunity_size]},
+                    bar: {color: "royalblue"},
+                    steps: [
+                        {range: [0, data.deal_information.deal_value], color: "lightblue"},
+                        {range: [data.deal_information.deal_value, data.deal_information.opportunity_size], color: "lightgray"}
+                    ],
+                    threshold: {
+                        line: {color: "red", width: 4},
+                        thickness: 0.75,
+                        value: data.deal_information.deal_value
+                    }
+                }
+            };
+            
+            const dealValueLayout = {
+                margin: {t: 25, b: 25, l: 25, r: 25},
+                height: 300,
+                width: 500
+            };
+            
+            Plotly.newPlot('deal-value-plot', [dealValueTrace], dealValueLayout);
+            
+            // 2. Win Probability indicator
+            const winProbTrace = {
+                type: 'indicator',
+                mode: 'gauge+number',
+                value: data.deal_information.win_probability,
+                title: {text: "Win Probability (%)"},
+                gauge: {
+                    axis: {range: [0, 100]},
+                    bar: {color: "darkgreen"},
+                    steps: [
+                        {range: [0, 30], color: "lightcoral"},
+                        {range: [30, 70], color: "lightyellow"},
+                        {range: [70, 100], color: "lightgreen"}
+                    ],
+                    threshold: {
+                        line: {color: "red", width: 4},
+                        thickness: 0.75,
+                        value: data.deal_information.win_probability
+                    }
+                }
+            };
+            
+            const winProbLayout = {
+                margin: {t: 25, b: 25, l: 25, r: 25},
+                height: 300,
+                width: 500
+            };
+            
+            Plotly.newPlot('win-probability-plot', [winProbTrace], winProbLayout);
+            
+            // 3. Stakeholder Sentiment Distribution pie chart
+            const sentimentColors = {
+                'champion': 'green',
+                'supporter': 'lightgreen',
+                'neutral': 'gray',
+                'skeptic': 'orange',
+                'blocker': 'red'
+            };
+            
+            const sentimentTrace = {
+                type: 'pie',
+                labels: data.stakeholders.map(s => s.sentiment),
+                values: data.stakeholders.map(s => s.count),
+                marker: {
+                    colors: data.stakeholders.map(s => sentimentColors[s.sentiment] || 'gray')
+                },
+                textinfo: 'label+percent',
+                insidetextorientation: 'radial'
+            };
+            
+            const sentimentLayout = {
+                margin: {t: 25, b: 25, l: 25, r: 25},
+                height: 300,
+                width: 500
+            };
+            
+            Plotly.newPlot('sentiment-plot', [sentimentTrace], sentimentLayout);
+            
+            // 4. Competitor Positioning bar chart
+            const threatColors = {
+                'high': 'crimson',
+                'medium': 'darkorange',
+                'low': 'gold'
+            };
+            
+            const competitorTrace = {
+                type: 'bar',
+                x: data.competitors.map(c => c.name),
+                y: data.competitors.map(c => c.strength),
+                marker: {
+                    color: data.competitors.map(c => threatColors[c.threat_level] || 'gray')
+                },
+                text: data.competitors.map(c => c.strength),
+                textposition: 'auto'
+            };
+            
+            const competitorLayout = {
+                margin: {t: 25, b: 50, l: 50, r: 25},
+                height: 300,
+                width: 500,
+                yaxis: {
+                    title: 'Positioning Strength (1-10)',
+                    range: [0, 10]
+                }
+            };
+            
+            Plotly.newPlot('competitor-plot', [competitorTrace], competitorLayout);
+        }
+        
+        // Initialize visualizations
+        document.addEventListener('DOMContentLoaded', function() {
+            createRelationshipVisualization();
+            createMetricsVisualizations();
+            
+            // Handle window resize to make plots responsive
+            window.addEventListener('resize', function() {
+                Plotly.relayout('relationship-plot', {
+                    width: document.getElementById('relationship-plot').clientWidth
+                });
+                Plotly.relayout('deal-value-plot', {
+                    width: document.getElementById('deal-value-plot').clientWidth
+                });
+                Plotly.relayout('win-probability-plot', {
+                    width: document.getElementById('win-probability-plot').clientWidth
+                });
+                Plotly.relayout('sentiment-plot', {
+                    width: document.getElementById('sentiment-plot').clientWidth
+                });
+                Plotly.relayout('competitor-plot', {
+                    width: document.getElementById('competitor-plot').clientWidth
+                });
+            });
+        });
+    </script>
+</body>
+</html>
