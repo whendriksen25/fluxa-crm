@@ -43,3 +43,6 @@ public/*.csv
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.git_bak/
+.git_bak/
+.git_old2/
