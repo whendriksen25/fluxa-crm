@@ -15,6 +15,26 @@ export const metadata: Metadata = {
     icon: "/favicon.jpg",
     apple: "/apple-touch-icon.jpg",
   },
+  openGraph: {
+    title: "FLUXA CRM",
+    description: "Duurzame mobiliteit, slim beheerd",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "FLUXA CRM",
+      },
+    ],
+    type: "website",
+    siteName: "FLUXA CRM",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FLUXA CRM",
+    description: "Duurzame mobiliteit, slim beheerd",
+    images: ["/og-image.png"],
+  },
 }
 
 export default function RootLayout({
