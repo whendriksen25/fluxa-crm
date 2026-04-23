@@ -72,11 +72,11 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         )}
       >
         {/* Logo + mobile close button */}
-        <div className="flex h-16 items-center justify-between border-b border-border/50 px-5">
+        <div className="flex h-16 items-center justify-between border-b border-border/50 px-4">
           <img
             src="/fluxa-logo.svg"
             alt="FLUXA"
-            className="h-9 w-auto"
+            className="w-full max-h-10"
           />
           {/* Close button — mobile only */}
           <button
