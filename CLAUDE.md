@@ -45,7 +45,7 @@ After making any code changes, run the relevant tests or start the dev server to
 
 ****Rule 5: Full autonomy in the CRM folder and localhost****  
 Claude has full permission to:  
-- Create, edit, and delete any files in the /Users/jean/Documents/Personal/Werk/Software/CRM directory  
+- Create, edit, and delete any files in the /Users/wim/Software/CRM directory  
 - Run any shell commands: npm, npx, curl, kill, lsof, node, git, and any other CLI tools  
 - Start, stop, restart, and kill the dev server on localhost:3000 (or any port)  
 - Make HTTP requests (GET, POST, PUT, DELETE) to localhost:3000 and any localhost port  
